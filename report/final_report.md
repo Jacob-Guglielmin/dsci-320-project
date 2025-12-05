@@ -261,7 +261,130 @@ The aim of view II was to visualize the internal variation in democracy within t
 
 ## Jennifer
 
+## **Theme: Democracy Dimensions & Social Media**
 
+This analysis examines the multiple dimensions of democracy captured in the V-Dem dataset—specifically the five high-level indices (electoral, deliberative, participatory, egalitarian, and liberal democracy), and their relation to government control over social media.
+
+The first dashboard focuses on the balance among the core democratic dimensions, showing how countries differ and how these patterns evolve over time. The second dashboard extends this, relating democratic profiles to indicators of social media monitoring, censorship and shutdowns, and showing where they align or diverge from broader democratic trends.
+
+## **Explanation of advanced data wrangling**
+
+To support my visual analyses, I created two derived variables from the five high-level democracy indices: electoral, deliberative, egalitarian, liberal and participatory. First, I created a **composite democracy index** by averaging the five indices, providing a summary of democratic quality for each country-year. Second, I computed a **row-wise standard deviation** to reflect within-country variation across the dimensions of democracy in each year. 
+
+## **View 1: Types of Democracy**
+
+![](../images/Jennifer/VIEW_1_IMAGE.png)
+
+## **Questions and Low-level Tasks**
+
+### **Analytic Question 1**
+
+To what extent do countries perform consistently across electoral, deliberative, participatory, egalitarian, and liberal democracy? Which countries experience periods of imbalance across these core dimensions, and when do these occur? How does a country’s balance across the five indices evolve over time? What patterns emerge when we examine periods of stability? Volatility? What does the shape of a country’s democratic profile look like in any given year, and how are these shapes similar or different across countries?
+
+### **Task Abstraction**
+
+Based on Stasko and Amar's framework, these questions motivate a variety of tasks. A key task is **correlate / find association**, examining whether the five democracy dimensions move together or diverge, and how these relationships evolve across time. The dashboard also supports **characterize distribution**, as the five indices function as components of a larger democratic construct whose balance can be examined within and across years. Additionally, the heatmap explicitly incorporates a **compute derived value** task, since standard deviation is calculated to summarize the degree of internal consistency or imbalance in each country’s democratic profile.
+
+## **Description & Characteristics of Channels**
+
+This view contains two visualizations, bidirectionally linked.
+
+The first visualization is a heatmap, where x-position encodes year (an ordered temporal attribute), enabling viewers to trace how a country’s internal balance across democratic dimensions changes over time. The y-position encodes country, a nominal variable.
+
+Colour is used to encode a derived metric, the standard deviation across the five high level democracy indices. For this encoding, I used ‘Magma’ as a colour scheme, which is both colorblind friendly and perceptually uniform. This means that changes in color accurately represent changes in the data; misleading differences in contrast are avoided. The use of color in the heatmap lends itself to pop out, helping viewers detect periods of greater imbalance across facets of democracy (bright yellow), and periods of balance (dark purple).
+
+These channel choices are appropriate for several reasons. X-position is well-suited for encoding year because the horizontal axis accommodates long timelines and supports how we naturally view left-to-right as temporal progression. Colour is well-suited for displaying a continuous measure when the exact numeric value is less important than its value relative to others, which is the case for standard deviation in this context. It also supports dense data representation: more than 70 years of variability can be shown compactly without overwhelming the viewer, while still allowing meaningful comparison across countries and across time.
+
+The second visualization is a parallel coordinates plot, where x-position encodes the five democracy indices (categorical variables). Position on a common scale, the y-axis, is used to encode the actual index values. Using position along a shared axis takes advantage of the highest-precision perceptual channel, allowing viewers to make accurate comparisons between values in two ways (1) comparing values above and below (i.e. values for the same index, in different years), and (2) comparing values to the left and right (i.e. other indices).
+
+Colour hue encodes the selected country–year, which is appropriate because these identifiers are categorical and non-ordered.
+
+The lines of the parallel coordinates plot show the relative structure across dimensions. For example, when viewing data for all years for a particular country (e.g. Bhutan, Chile, Canada, Germany, amongst many other countries), many upward lines toward the Electoral Democracy axis makes it clear that this dimension tends to score higher than its neighbours.
+
+## **Characteristics of Interaction**
+
+This view supports several forms of interaction across the two representations. The visualizations are bidirectionally linked, with actions in one update the other. 
+
+**Filtering controls:** The country dropdowns support categorical filtering, allowing users to restrict the view to two countries (or even a single country, by selecting the same country in each dropdown). The year slider provides temporal filtering, enabling viewers to focus on a single year for the selected countries.
+
+**Direct selection in the heatmap:** Users can click a cell to filter both views to that specific year, or shift-click to select multiple years. These selections highlight the chosen temporal slices in the heatmap and update the data displayed in the parallel coordinates plot.
+
+**Direct selection in the parallel coordinates plot:** Clicking a point filters the heatmap to the corresponding year. Clicking outside of the data resets the plot to show all years of data for the selected countries.
+
+These controls allow users to tailor the view to their analytic goals, which may include comparing democratic profiles for different countries, exploring temporal trends and/or examining how democratic dimensions shift for a single country over time.
+
+## **Critique**
+
+There are several aspects of this view that invite critique and potential refinement.
+
+The heatmap uses the Magma colour scale. While perceptually uniform, the differences between neighbouring values are difficult to distinguish without hovering to inspect exact values. Colour value alone does not provide strong discriminability for these very small differences. However, since such small differences are not meaningful for our tasks, this is not a significant limitation. The visualization is meant to illustrate *strong* periods of balance or imbalance rather than emphasize tiny fluctuations. 
+
+The interaction design introduces some potential complexity. If a user’s goal is simply to inspect a single country–year pair, coordinating a dropdown, a year slider, and clickable heatmap cells may create more steps and more cognitive load than necessary. Simpler mechanisms, such as a unified selector or small multiples, could have reduced this overhead. However, this dashboard design intentionally prioritizes exploratory breadth. 
+
+Another limitation is related to Altair’s legend constraints. Note that the legend only includes country, and not country-year. Although I experimented with using a calculated field to display the year in addition to the country in the legend, Altair does not allow hiding the legend dynamically when all years are shown. As a result, when the user is viewing data for all years, the legend of the parallel coordinates plot ends up with 100+ values. To avoid overwhelming the viewer, I chose to display only the country name, rather than both country and year—a compromise, since the year is visible in the top plot, though not ideal\!
+
+Another detail I experimented with was applying the heatmap’s selected country–year colours directly to the parallel coordinates plot. However, the selected colours in the heatmap change whenever a new year is selected\! More visual consistency seems desirable here, as this could easily produce situations where the two countries appear with identical—or nearly identical—colours in the bottom plot, but with meanings that are effectively flipped when a different year is selected. To avoid this potential confusion, I chose to use distinct, stable colours in the parallel coordinates plot.
+
+Relatedly, selecting colours for the parallel coordinates plot posed its own challenge: they needed to be (1) sufficiently distinct from one another and from all colours in the magma palette, and (2) visually compatible so the dashboard retained a cohesive overall appearance. I did my best to balance these constraints, though I acknowledge that the darker grey might, at first glance, be mistaken for one of the darker tones in the Magma scale.
+
+## **View 2: Democracy & Government Control of Social Media**
+
+![](../images/Jennifer/VIEW_2_IMAGE.png)
+
+## **Questions and Low-level Tasks**
+
+### **Analytic Question 2**
+
+What countries have experienced the most significant social media shutdowns? To what extent do governments show similar levels of social media control across different approaches—monitoring, censorship, and shutdown? How does this relate to the overall democratic nature of the country? Does increased government social-media control correlate with declines in democracy? What do the democracy profiles of the world’s harshest shutdown countries look like?
+
+### **Task Abstraction**
+
+Based on Stasko and Amar’s framework, these questions motivate a variety of low-level analytic tasks. Users must **retrieve values**, such as specific shutdown scores or democracy index values for chosen countries and years. They also need to **find extremum**, identifying which countries exhibit the highest levels of social-media control or the most pronounced democratic imbalances. The view supports **filtering**, enabling users to isolate a single country to examine its patterns more closely. It also encourages **correlation**, as users assess whether the different forms of social-media control tend to move together across time. Finally, it supports **characterizing distributions**, allowing users to see how democracy scores evolve over time and identify temporal patterns. The critique section reflects on how effectively the visualizations support these tasks.
+
+## **Description & Characteristics of Channels**
+
+This view contains three coordinated visualizations that together explore the relationship between democratic quality and government control of social media.
+
+The first visualization is a bar chart showing the worst countries by shutdown score for the selected year. Length / horizontal position encode the magnitude of the shutdown score, and enable direct reading of values. I chose a bar chart for this view because differences in bar length provide a strong perceptual impact; the chart allows viewers to quickly detect which countries experience severe shutdown activity. Colour (salmon-red) is used consistently across this and the bottom plot to connect the ‘shutdown’ attribute displayed on each.
+
+The second visualization is an area/line chart which illustrates the five high level indices of democracy; it uses area as a mark to encode the composite democracy score, and line as a mark to represent the individual indices. An area gives the composite score more visual weight, which facilitates comparisons with the chart below (whose x-axis is aligned\!). Color hue separates the five democracy indices; I used a colorblind friendly palette from Paul Tol.
+
+The third visualisation is a line chart representing three forms of government social media control: monitoring, censorship and shutdowns. Vertical position on a common scale is the highest-precision quantitative channel, and supports comparison between the three attributes. Line marks are appropriate because the analytic task involves identifying temporal trends and assessing whether the control mechanisms move together or diverge. Lastly, x-axis alignment with the democracy chart above it supports comparison across panels.
+
+## **Characteristics of Interaction**
+
+* Describe interaction and chars.  
+* What interactions are available? Why those, how do they support the tasks?
+
+There are two interactions. One is you can choose a country from the dropdown. The corresponding data will show in the area/line plot and the line plot. 
+
+The other interaction is if you click on the area, which represents the composite democracy (average across five attributes of democracy), it will show the five constituent indices as lines. This supports the question of understanding how increased government shutdowns are related the overall democratic nature of the country; in this way we can understand what aspects of democracy might be most affected, and with more nuance, whether particular indices are leading or lagging measure (e.g. we first notice internet shutdowns, then later changes in participatory democracy, and even later see the electoral index decreases).
+
+This view includes two primary interactions. First, the country dropdown menu allows users to select a single country, updating both the second (democracy area/line chart) and third (government-control line) chart. This filter enables users to focus on one country’s trajectory and supporting tasks such as *retrieve value*, *filter*, *identify trends*, and *compare* (across years or across democracy dimensions). By allowing users to isolate a country of interest, the dashboard supports the analytic question of how government social-media control relates to democratic quality for specific countries.
+
+The second interaction involves checking the “Show component democracy indices” box, which reveals the five underlying component indices as individual lines. This provides details on demand, enabling users to transition from a high-level view to a more granular breakdown of electoral, liberal, deliberative, participatory, and egalitarian democracy. This interaction supports more sophisticated analytic tasks—including *characterize distribution*, *correlate*, and *identify temporal patterns*—by allowing viewers to see which components diverge first, which remain stable, and whether democratic decline is broad-based or concentrated in specific dimensions. For example, by examining this plot alongside the one below, a user may observe that shutdown activity increases before declines appear in participatory or electoral democracy, suggesting a possible sequence of effects.
+
+## **Critique**
+
+There are several ways in which this view could be refined to better support the analytic tasks. 
+
+One limitation is related to country selection. It would be desirable to allow users to select a country directly from the bar chart; however, because the bar chart only displays the *worst* shutdown countries for the selected year, this would restrict exploration to a narrow subset. The dropdown remains necessary, but the lack of direct selection increases interaction cost.
+
+A more fundamental critique is that the order of the second and third plots could be improved. Presenting the government-control chart directly below the bar chart, followed by the democracy indices, would better reflect the flow help comparison for correlation tasks.
+
+Another interpretability issue is that the shutdown score is non-intuitive: lower values indicate worse outcomes, while higher values represent fewer shutdowns. This inversion may confuse users performing *retrieve value* or *interpret value* tasks. Re-expressing the variable (for example, by multiplying it by –1) could reduce cognitive load. However, this change would remove the helpful convention that “positive \= good,” which is used consistently in the democracy indices. It would also reverse the direction of movement relative to the other charts. For these reasons, I chose to keep the original scale.
+
+Some overlapping lines occur in countries with stable democracy scores or minimal variation in control measures, which reduces readability. Making lines thinner could mitigate this issue, at the expense of readability. Introducing brushing might be the strongest choice to deal with this; mouseover could bring the relevant line to the foreground.
+
+One more improvement would be to incorporate interaction linking between views. For instance, enabling users to click a spike in the control chart and automatically highlight the corresponding year in the democracy chart would strengthen *correlation* and *identify trend* tasks. This would also allow users to more easily detect lead–lag relationships between shutdown activity and democratic quality.
+
+## **Summary**
+
+Reflecting on the underlying data, working with these indicators showed me how much complexity exists behind the label of “democracy”. With five high-level indices, each country’s profile looks different, and the data pushed me to think more carefully about what we mean when we describe a system as democratic.
+
+Reflecting on my learnings, one thing that surprised me again and again in this course was how much a visualization can be tuned to a specific task. Seemingly small choices, like switching from horizontal to vertical concatenation, make a substantial difference to the viewer's experience of the data. Working on this theme taught me how easily different representations can emphasize different stories in the same data. I learned that visualization requires careful decisions about which comparisons to emphasize, and that even small choices in layout, scaling, or visual weight (e.g. especially with bar charts vs line charts) can influence what the viewer notices first. I also realized how long it takes to turn a clear idea into a clean, functional visualization, especially once interactivity is involved\!
+
+Reflecting on what I’d do differently, I think I would attempt to solidify the conceptual design earlier, before experimenting with interactive elements. I would also limit scope sooner, focusing on fewer questions and refining them more deeply, instead of trying to support too many directions at once!
 
 
 ----------------
