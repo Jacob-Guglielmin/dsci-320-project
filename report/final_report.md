@@ -275,6 +275,8 @@ To support my visual analyses, I created two derived variables from the five hig
 
 ![](../images/Jennifer/VIEW_1_IMAGE.png)
 
+![](../images/Jennifer/jen_gif_1.gif)
+
 ## **Questions and Low-level Tasks**
 
 ### **Analytic Question 1**
@@ -330,6 +332,8 @@ Relatedly, selecting colours for the parallel coordinates plot posed its own cha
 ## **View 2: Democracy & Government Control of Social Media**
 
 ![](../images/Jennifer/VIEW_2_IMAGE.png)
+
+![](../images/Jennifer/jen_gif_2.gif)
 
 ## **Questions and Low-level Tasks**
 
